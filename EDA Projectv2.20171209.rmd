@@ -48,13 +48,13 @@ str(rw)
 
 The table above shows the structure of the dataset we plan to explore. We can find that there are 13 variables in this dataset, including the index variable X, dependent variable quality and other independent variables, which may affect quality of red wine and there are 1599 observations in total.
 
-```{r}
+```{r echo=FALSE}
 summary(rw)
 ```
 
 The above is the statistics summary of our dataset.we can find the minimum, maximum, median, mean, 1st quantile, 3rd quantile of each variable easily. In the next step, I plan to draw the histgrams of each variable by using a function.The following is the function to create a histgram.
 
-```{r}
+```{r echo=FALSE}
 #write a function to create a histgram
 create_histgram <- function(var,xlab = var, data = rw, log = F,x_text_size = NULL, show_num = F) {
   options(digits=3)
@@ -76,7 +76,7 @@ create_histgram <- function(var,xlab = var, data = rw, log = F,x_text_size = NUL
 ```
 
 
-```{r}
+```{r echo=FALSE}
 ggplot(rw,aes(quality))+
   geom_histogram(stat = 'count')+
   stat_count(geom="text", aes(label=..count..), vjust=-0.2) 
@@ -86,14 +86,15 @@ we can see from the graph above that quality  is a discrete variable. Most wines
 
 Fixed acidity and volatile acidity are both about the acidity of the red wine, so I would like to put the histgrams of these two characteristics together. The graphs are shown as follows:
 
-```{r}
+```{r echo=FALSE}
 p1=create_histgram('fixed.acidity')
 p2=create_histgram('volatile.acidity')
 grid.arrange(p1,p2,ncol=2)
 ```
 
 The histgrams above both all skewed to the right, so I plot these values on a log scale for these variables. 
-```{r}
+
+```{r echo=FALSE}
 p1=create_histgram('fixed.acidity',log = T, x_text_size = 10)
 p2=create_histgram('volatile.acidity',log = T,x_text_size = 10)
 
@@ -103,100 +104,101 @@ grid.arrange(p1,p2,ncol=2)
 
 Since fixed acidity and volatile acidity are all about the acidity of red wine, I also would like to create a new variable named total acidity to test the relationship of red wines' total acidity and quality. The histgram of the total acidity is as follows:
 
-```{r}
+```{r echo=FALSE}
 rw$total.acidity<- rw$fixed.acidity+rw$volatile.acidity
 create_histgram('total.acidity')
 ```
-```{r}
+
+```{r echo=FALSE}
 create_histgram('total.acidity',log= T)
 ```
 
 The histgram of the total acidity with no data transformation is skewed to right with most red wines of total acidity concentrating on the range of 7 and 8.5 and some outliers exceeding 15. the distribution of the values on a log scale seems to be a normal distribution. 
 
-```{r}
+```{r echo=FALSE}
 create_histgram('residual.sugar')
 ```
 
-```{r}
+```{r echo=FALSE}
 create_histgram('total.acidity',log= T)
 ```
 
-```{r}
+```{r echo=FALSE}
 create_histgram('residual.sugar',log = T)
 ```
 
 The distribution of log(residual sugars) of these red wines is skewed to the right. Most log(residual sugars) are 1.59 to 2.81, with some outliers larger than 8.
 
-```{r}
+```{r echo=FALSE}
 create_histgram('chlorides')
 ```
 
-```{r}
+```{r echo=FALSE}
 create_histgram('chlorides') +xlim(0.1,0.2)
 ```
 
 The distribution of chlorides of these red wines is skewed to the right, with some outliers larger than 0.2. So I draw another graph excluding these outliers. We can find that the colorides of most red wines concentrate on 0.1 to 0.125.
 
-```{r}
+```{r echo=FALSE}
 g1<- create_histgram('total.sulfur.dioxide')
 g2<- create_histgram('free.sulfur.dioxide')
 grid.arrange(g1,g2,ncol=1)
 
 ```
 
-```{r}
+```{r echo=FALSE}
 g1<- create_histgram('total.sulfur.dioxide',log= T)
 g2<- create_histgram('free.sulfur.dioxide',log = T)
 grid.arrange(g1,g2,ncol=1)
 ```
 
-```{r}
+```{r echo=FALSE}
 summary(rw$total.sulfur.dioxide)
 summary(rw$free.sulfur.dioxide)
 ```
 
 The distributions of total sulfur dioxide and free sulfur dioxide are both skewed to the right. Most red wines' total sulfur dioxide concentrate on 22 to 62 while most red wines' free sulfur dioxide is from 7 to 21. I also plot these values on a log scale. It seems that the distribution of log(total sulfur dioxide) is a normal distribution. 
 
-```{r}
+```{r echo=FALSE}
 create_histgram('density')
 ```
 
-```{r}
+```{r echo=FALSE}
 create_histgram('pH')
 ```
 
-```{r}
+```{r echo=FALSE}
 summary(rw$pH)
 summary(rw$density)
 ```
 
 The pH and density of the red wine follows a normal distribution. Most red wines' pH is from 3.21 to 3.4 while their density is from 0.9956 to 0.9978.
 
-```{r}
+```{r echo=FALSE}
 create_histgram('sulphates')
 ```
 
-```{r}
+```{r echo=FALSE}
 create_histgram('sulphates',log=T)
 ```
 
 
-```{r}
+```{r echo=FALSE}
 summary(rw$sulphates)
 ```
 
 The distribution of sulphates is skewed to the right, most values with some outliers larger than 1.25. Most red wines have a sulphates between 0.55 and 0.73.
 
-```{r}
+```{r echo=FALSE}
 create_histgram('alcohol')
 ```
 
-```{r}
+```{r echo=FALSE}
 create_histgram('alcohol',log=T)
 ```
 
 
-```{r}
+```{r echo=FALSE}
 summary(rw$alcohol)
 ```
 
@@ -227,11 +229,11 @@ The distribution of critic acid appear bimodal and the distributions of the resi
 
 # Bivariate Plots Section
 
-```{r}
+```{r echo=FALSE}
 rw_subset <- rw[,c(2:14)]
 ```
 
-```{r}
+```{r echo=FALSE}
 # The following function is from the reference below. This function is to customize the visualization of correlations shown in the folloing pair graphs.
 # Reference: https://github.com/ggobi/ggally/issues/139
 my_custom_cor <- function(data, mapping, color = I("grey50"), sizeRange = c(1, 3), ...) {
@@ -320,7 +322,7 @@ I create a correlation matrics to figure out the relationship between each varia
 
 In the next step, I would like to roughly figure our the trend of features of wines against qualities.
 
-```{r}
+```{r echo=FALSE}
 # This function is used to create a table, grouped by x, 'quality', of medians
 show_med <- function(y, data = rw, x= 'quality'){
   data_group <- group_by_(data,x)
@@ -341,56 +343,56 @@ boxplot_w_med <- function(y, data= rw, x = 'quality'){
 }
 ```
 
-```{r}
+```{r echo=FALSE}
 boxplot_w_med('fixed.acidity')
 ```
 
 The medians of fixed acidities around 8 with the increase of quality.For the medians, we could find that from quality of 3 to 7, the medians of fixed acidities are incleasing and wines with quality 7 and 8 both has medians of fixed acidities over 8. There might be some positive correlations bewtween these two variables.
 
-```{r}
+```{r echo=FALSE}
 
 boxplot_w_med('volatile.acidity')
 ```
 
 Volatile acidity is negatively correlated with quality. With the increase of red wines' quality, the medians of volatile acidities decrease.
 
-```{r}
+```{r echo=FALSE}
 boxplot_w_med(y = 'citric.acid')
   
 ```
 
 The medians of citric acid are increasing from quality 3 to quality 8 and the upper and lower whiskers, generally, are increasing with the quality. So citric acid could be positive related to the quality of wines.
 
-```{r}
+```{r echo=FALSE}
 boxplot_w_med('residual.sugar')
                
 ```
+
 The residual sugar has almost no effect on the quality of red wine. With quality increasing, the residual sugar is stable.
 
-```{r}
+```{r echo=FALSE}
 boxplot_w_med('chlorides')
 ```
+
 We can find that chlorides of wines with quality 5,6 and 7 have more outliers comparing to the rest of qualities. I will focus more on the majority under the upper fence. I will scale the yaxis and see the majority.
 
-```{r}
+```{r echo=FALSE}
 boxplot_w_med('chlorides') + ylim(0,0.2)
 ```
 
 If we zoom in the y between 0 and 0.2, we can find that the medians of chlorides have a decreasing trend on qualities. The quality 3 has the median of chlorides of 0.0905 while the median of chlorides of wine with quality 8 has 0.0705, which is more than 20% less. We can also observe that the lower whiskers are decreasing with increasing qualities. The wines with higher quality might have lower chlorides based on the graph. 
 
-```{r}
+```{r echo=FALSE}
 boxplot_w_med('free.sulfur.dioxide')
 ```
 
-
-
-```{r}
+```{r echo=FALSE}
 boxplot_w_med('total.sulfur.dioxide')
 ```
 
 The trends of total sulfur dioxide and free sulfur dioxide have a very similar patterns, both having high medians in quality 5 and decreasing to both sides. This might be due to the correlations between these two variables. 
 
-```{r}
+```{r echo=FALSE}
 ggplot(rw,aes(x= total.sulfur.dioxide, y = free.sulfur.dioxide))+
   geom_point(alpha = 0.3)+
   scale_x_log10()+
@@ -399,37 +401,37 @@ ggplot(rw,aes(x= total.sulfur.dioxide, y = free.sulfur.dioxide))+
 
 The free sulfur dioxide and total sulfur dioxide have a relatively clear linear pattern with scales of axis in logarithm. This correlation may result in the similar distribution in two boxplots above. 
 
-```{r}
+```{r echo=FALSE}
 boxplot_w_med('density')
 ```
 
 Before I thought quality seems to be raleted to density. However from this graph, we can find that density doesn't have a strong correlation with quality.
 
-```{r}
+```{r echo=FALSE}
 boxplot_w_med('pH')
 ```
 
 In the boxplot above, a trend of decreasing pH values with increasing qualities could be observed. This trend is not only about medians, but also the lower fence and upper fence. 
 
-```{r}
+```{r echo=FALSE}
 boxplot_w_med('sulphates')
 ```
 
 The median of sulphates is increasing while the qualities of wines increase as well, so do the IQR.
 
-```{r}
+```{r echo=FALSE}
 boxplot_w_med('alcohol')
 ```
 
 Alcohol is positively related to the quality of red wine. And alcohol is closely related to the density of the red wine since the density of alcohol is less than that of water. Also, fixed acidity is closely related to the density. The higher fixed acidity ofthe red wines, the higher density the red wines are. The graph of fixed acidity and density is shown as follows:
 
-```{r}
+```{r echo=FALSE}
 ggplot(data = rw, aes(x = fixed.acidity, y = density)) +
   geom_point(alpha = .2)+
  geom_smooth() 
 ```
 
-density increases with the increase of fixed acidity.
+Density increases with the increase of fixed acidity.
 
 # Bivariate Analysis
 
@@ -445,7 +447,7 @@ Fixed acidity has high positive correlation with citric acid, density and pH. Al
 
 First, I create a scatter plot about the relationship between volatile acidity and alcohol, which have relatively high correlations with the quality of red wine.
 
-```{r}
+```{r echo=FALSE}
 ggplot(aes(x = volatile.acidity, y = alcohol,color=quality), 
        data = rw) + 
   geom_point(size = 2) +
@@ -453,7 +455,7 @@ ggplot(aes(x = volatile.acidity, y = alcohol,color=quality),
   scale_color_brewer()
 ```
 
-```{r}
+```{r echo=FALSE}
 ggplot(aes(x = volatile.acidity, y = alcohol), 
        data = rw) +
     facet_wrap(~quality) + 
@@ -463,7 +465,7 @@ ggplot(aes(x = volatile.acidity, y = alcohol),
 
 I find that red wines with better quality grade tend to have more alcohol and lower volatile acidity. I also create a grpah to show the attributes of alcohol and volatile acidity in each quality category.Most red wines' quality is within the range of 5 and 6.
 
-```{r}
+```{r echo=FALSE}
 rw$fixed.acidity.overhalf <-rw$fixed.acidity > quantile(rw$fixed.acidity,probs = .5)
 rw$citric.acid.overhalf <-  'Not overhalf' 
 rw$citric.acid.overhalf[rw$citric.acid > quantile(rw$citric.acid,probs = .5)] <-  'Overhalf' 
@@ -480,7 +482,7 @@ ggplot(aes(x=free.sulfur.dioxide,y=total.sulfur.dioxide), data = rw) +
 
 For here, I classify citric acid based on the median, Wines with citric acid over the medians are colored blue and the ones with citric acid less than the median are colored red. From quality 3 to 8, we can see free sulfur dioxide has a positive linear relationship with total sulfur dioxide in wines with different qualities. Also, we can see wines with higher quality seem to have more citric acid. It looks like blue points are taking more places with the quality increasing. 
 
-```{r}
+```{r echo=FALSE}
 set.seed(1234)
 m1 <- lm(as.numeric(quality) ~ alcohol, data = rw)
 m2 <- update(m1, ~ . + volatile.acidity)
@@ -490,7 +492,7 @@ m5 <- update(m4, ~ . + fixed.acidity)
 mtable(m1,m2,m3,m4,m5)
 ```
 
-```{r}
+```{r echo=FALSE}
 set.seed(1234)
 n1 <- lm(as.numeric(quality) ~ alcohol, data = rw)
 n2 <- update(n1, ~ . + log(volatile.acidity))
@@ -500,10 +502,11 @@ n5 <- update(m4, ~ . + fixed.acidity)
 mtable(n1,n2,n3,n4,n5)
 ```
 
-```{r}
+```{r echo=FALSE}
 mtable(n1,n2,n3,n4,n5,m1,m2,m3,m4,m5)
 ```
 
+I create 10 models to predict the quality of red wines using other significant variables. The result is not very good since the R-square is relatively small.
 
 # Multivariate Analysis
 
@@ -514,8 +517,6 @@ Most red wines' quality us clustered around the range of 5 and 6 whhen their vol
 ### Did you create any models with your dataset? Discuss the \strengths and limitations of your model.
 
 I create 10 models in total with my dataset to predict the quality by using several variables which have relatively high coefficients with quality. The limitation of my models is that the R-square is relatively low, which means most information is needed for prediction of red wine quality. 
-
-
 
 # Final Plots and Summary
 
@@ -529,24 +530,17 @@ make sure you justify why you chose each plot by describing what it shows.
 
 ### Plot One
 
-```{r fig.width = 10, fig.height = 10, echo=FALSE, Plot_One}
-
-set.seed(1836)
-# names(rw_subset)
-  ggpairs(rw_subset[sample.int(nrow(rw_subset),1000),],axisLabels ='show',
-        lower = list(continuous = "smooth"),
-        diag = list(continuous = "blankDiag"),
-        upper = list(continuous = my_custom_cor))+
-  theme(axis.text.x = element_blank(),
-        axis.text.y = element_blank(),
-        strip.text.x = element_text(angle=90,hjust=1,size = 10),
-        strip.text.y = element_text(angle=0,hjust=1,size = 10))+
-          ggtitle("Correlation Between Red Wine Attributes")+
-    theme(plot.title = element_text(size = 10, face = "bold"))
+```{r echo=FALSE,Plot_One}
+ggplot(data = rw, aes(x = fixed.acidity, y = density)) +
+  geom_point(alpha = .2)+
+ geom_smooth()+
+  xlab("Fixed Acidity")+ylab("Density")+
+  ggtitle("Relationship between Density and Fixed Acidity")+
+   theme(plot.title = element_text(size = 15, face = "bold"))
 ```
 
 ### Description One
-The plot 2 shows the correlation between each variable.we can find that: volatile acidity and alcohol are most strongly related to quality while citric acid and sulphates are moderately correlated with quality. Volatile acidity are negatively related to the quality of the red wines while the alcohol are positively related to the quality. Citric acid and sulphates are both positively related to the quality. However, the correlation between these are relatively small, less than 0.3.
+The plot 1 shows the relationship between fixed acidity and density. with the increase of fixed acidity, the density increases at the same time.
 
 ### Plot Two
 ```{r echo=FALSE, Plot_Two}
@@ -556,21 +550,23 @@ ggplot(aes(x = volatile.acidity, y = alcohol,color=quality),
   scale_color_identity(guide = 'legend')+
   scale_color_brewer()+
   ggtitle("Red Wine Quality with Red Wine Attributes of Alcohol and Volatile Acidity  ")+
-  theme(plot.title = element_text(size = 10, face = "bold"))
+  theme(plot.title = element_text(size = 10, face = "bold"))+
+  xlab("Volatile Acidity")+ylab("Alcohol")
 ```
 
 ### Description Two
 Plot two shows the relationship among volatile acidity, alcohol and quality. Red wines with better quality grade tend to have more alcohol and lower volatile acidity and most red wines' quality is within the range of 5 and 6.
 
 ### Plot Three
-```{r}
+```{r  echo=FALSE}
 ggplot(aes(x=free.sulfur.dioxide,y=total.sulfur.dioxide), data = rw) +
   geom_point(aes(color=citric.acid.overhalf),show.legend = T)+
   facet_wrap(~ quality)+
   scale_color_discrete(name="Citric Acid",
                        breaks=c("Not overhalf", "Overhalf"))+
   ggtitle("Relationship Among Total Sulfur Dioxide, Free Sulfur Dioxide and Citric Acid")+
-  theme(plot.title = element_text(size = 10, face = "bold"))
+  theme(plot.title = element_text(size = 10, face = "bold"))+
+  xlab("Free Sulfur Dioxide")+ylab("Total Sulfur Dioxide")
 ```
 
 ### Description Three
